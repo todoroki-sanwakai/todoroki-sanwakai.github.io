@@ -194,7 +194,7 @@ footer small{font-size:.75rem;color:#d4e4ea}
 /* スマートフォンのメールアドレス表示調整 */
 @media (max-width: 600px) {
   #contact-email {
-    font-size: clamp(16px, 4.5vw, 20px);
+    font-size: 22px;
     overflow-wrap: anywhere;
     word-break: break-word;
     text-align: center;
