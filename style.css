@@ -200,3 +200,30 @@ footer small{font-size:.75rem;color:#d4e4ea}
     text-align: center;
   }
 }
+
+/* スマートフォン用：訓練予定表の表示改善 */
+@media (max-width: 600px) {
+
+  /* 小さな埋め込みカレンダーを非表示 */
+  #schedule iframe[src*="calendar.google.com"] {
+    display: none;
+  }
+
+  /* 予定表を開くリンクを大きなボタンにする */
+  #schedule a[href*="calendar.google.com"] {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 340px;
+    margin: 16px auto;
+    padding: 16px 12px;
+    background: #1e5677;
+    color: #ffffff;
+    border-radius: 12px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 1.5;
+  }
+}
