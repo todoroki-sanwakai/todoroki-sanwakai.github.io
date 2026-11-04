@@ -50,6 +50,11 @@
     margin: 10px 0;
   }
 
+  /* 時間・場所の文字を一回り大きくする */
+  .event .details {
+    font-size: 20px;
+  }
+
   .back {
     display: block;
     background: #1e5677;
@@ -60,7 +65,7 @@
     text-decoration: none;
     font-weight: bold;
   }
-  
+
 </style>
 </head>
 
@@ -73,15 +78,17 @@
   <div class="event">
     <div class="date">11月15日（日）</div>
     <div class="name">【表示例】定例訓練</div>
-    <div>時間：午前8時～9時</div>
-    <div>場所：等々力7丁目公園</div>
+    
+    <div class="details">時間：午前8時～9時</div>
+    <div class="details">場所：等々力7丁目公園</div>
+
   </div>
 
   <div class="event">
     <div class="date">11月29日（日）</div>
     <div class="name">【表示例】防災訓練</div>
-    <div>時間：午前9時～10時</div>
-    <div>場所：訓練場所の例</div>
+    <div class="details">時間：午前9時～10時</div>
+    <div class="details">場所：訓練場所の例</div>
   </div>
 
   <p>※現在は表示試験用の架空の日程です。</p>
