@@ -75,27 +75,122 @@
 
   <p>今後の訓練予定をご案内します。</p>
 
-  <div class="event">
-    <div class="date">11月15日（日）</div>
-    <div class="name">【表示例】定例訓練</div>
-    
-    <div class="details">時間：午前8時～9時</div>
-    <div class="details">場所：等々力7丁目公園</div>
-
+  <!-- Googleカレンダーの予定を表示する場所 -->
+  <div id="calendar-events" aria-live="polite">
+    <p>Googleカレンダーとの接続準備中です。</p>
   </div>
-
-  <div class="event">
-    <div class="date">11月29日（日）</div>
-    <div class="name">【表示例】防災訓練</div>
-    <div class="details">時間：午前9時～10時</div>
-    <div class="details">場所：訓練場所の例</div>
-  </div>
-
-  <p>※現在は表示試験用の架空の日程です。</p>
 
   <a class="back" href="index.html">
     ホームページへ戻る
   </a>
 </main>
+
+
+<script>
+/* 市民消火隊 Googleカレンダー自動表示 */
+
+const API_KEY = "AIzaSyCvjvx6Qk7OH2O2J1EuF4thZDQs3qH-0xY";
+
+const CALENDAR_ID =
+  "0223aee15358709bcc2c9262bf3edf2f1c817088f6c6058ea64d36880e7bf7a7@group.calendar.google.com";
+
+async function loadCalendarEvents() {
+  const area = document.getElementById("calendar-events");
+
+  area.textContent = "予定を読み込んでいます…";
+
+  const start = new Date();
+  const end = new Date();
+  end.setDate(end.getDate() + 180);
+
+  const params = new URLSearchParams({
+    key: API_KEY,
+    timeMin: start.toISOString(),
+    timeMax: end.toISOString(),
+    singleEvents: "true",
+    orderBy: "startTime",
+    maxResults: "100"
+  });
+
+  const url =
+    "https://www.googleapis.com/calendar/v3/calendars/" +
+    encodeURIComponent(CALENDAR_ID) +
+    "/events?" + params.toString();
+
+  try {
+    const response = await fetch(url, { cache: "no-store" });
+
+    if (!response.ok) {
+      throw new Error("API通信エラー：" + response.status);
+    }
+
+    const data = await response.json();
+    area.replaceChildren();
+
+    const events = data.items || [];
+
+    if (events.length === 0) {
+      area.textContent = "現在、登録された予定はありません。";
+      return;
+    }
+
+    const dateFormat = new Intl.DateTimeFormat("ja-JP", {
+      timeZone: "Asia/Tokyo",
+      month: "long",
+      day: "numeric",
+      weekday: "short"
+    });
+
+    const timeFormat = new Intl.DateTimeFormat("ja-JP", {
+      timeZone: "Asia/Tokyo",
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    });
+
+    for (const event of events) {
+      const allDay = !event.start.dateTime;
+      const startDate = new Date(
+        event.start.dateTime || event.start.date + "T00:00:00+09:00"
+      );
+
+      const card = document.createElement("div");
+      card.className = "event";
+
+      function addLine(className, value) {
+        const line = document.createElement("div");
+        line.className = className;
+        line.textContent = value;
+        card.appendChild(line);
+      }
+
+      addLine("date", dateFormat.format(startDate));
+      addLine("name", event.summary || "予定名なし");
+
+      const time = allDay
+        ? "終日"
+        : timeFormat.format(new Date(event.start.dateTime)) +
+          "～" +
+          timeFormat.format(new Date(event.end.dateTime));
+
+      addLine("details", "時間：" + time);
+      addLine(
+        "details",
+        "場所：" + (event.location || "場所の記載なし")
+      );
+
+      area.appendChild(card);
+    }
+
+  } catch (error) {
+    console.error(error);
+    area.textContent =
+      "予定を取得できませんでした。時間をおいて再度お試しください。";
+  }
+}
+
+loadCalendarEvents();
+</script>
+
 </body>
 </html>
